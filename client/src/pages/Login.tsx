@@ -11,7 +11,7 @@ import { app, provider } from "../utils/firebase";
 const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userInfo = useSelector((state: RootState) => {
-    return state.shop.userInfo
+    return state.userInfo
   })
   const dispatch = useDispatch();
   const auth = getAuth(app);

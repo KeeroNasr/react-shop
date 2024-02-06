@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import './App.css'
-import { getProductsList } from './api/Api'
+import { getAllProductsInCart, getProductsList } from './api/Api'
 import Layout from './components/layout/Layout'
 import ProductDetails from './components/products/ProductDetails'
 import Cart from './pages/Cart'
@@ -24,7 +24,8 @@ function App() {
         },
         {
           path: '/cart',
-          element:<Cart/>
+          element: <Cart />,
+          loader:getAllProductsInCart
         },
         {
           path: '/login',

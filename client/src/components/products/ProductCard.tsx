@@ -2,12 +2,13 @@ import { BsArrowRight } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import { addToCart } from '../../store/shopSlice';
+import { getTotalQuantityAsync, updateCart } from '../../store/shopSlice';
+import { AppDispatch } from '../../store/store';
 import { Product } from '../../utils/Product.interface';
 
 const ProductCard = (props: { product: Product }) => {
 
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const nav = useNavigate();
   const id = props.product.title;
   const idToString = (id: string): string => {
@@ -21,19 +22,19 @@ const ProductCard = (props: { product: Product }) => {
       }
     });
   }
-  const addItemHandler = () => {
-    dispatch(addToCart({
+  const handleAddProduct = async () => {
+    const product = {
       _id: props.product._id,
       title: props.product.title,
       image: props.product.image,
       price: props.product.price,
       quantity: 1,
       description: props.product.description
-    }))
+    }
+    dispatch(updateCart(product))
+    dispatch(getTotalQuantityAsync());
     toast.success(`${props.product.title} is added to the cart`)
-    // console.log('from com', props.product);
-
-  }
+  };
   return (
     <div className='group relative'>
       <div onClick={handleNav} className=' w-full h-96 cursor-pointer overflow-hidden'>
@@ -51,7 +52,7 @@ const ProductCard = (props: { product: Product }) => {
               <p className='line-through text-gray-500'>${props.product.oldPrice}</p>
               <p className='font-semibold'>${props.product.price}</p>
             </div>
-            <p onClick={addItemHandler} className='absolute z-20 w-[100px] text-gray-500 hover:text-gray-900 flex items-center gap-1 top-0 transform -translate-x-32 group-hover:translate-x-0 transition-transform cursor-pointer duration-500'>add to cart <span>
+            <p onClick={handleAddProduct} className='absolute z-20 w-[100px] text-gray-500 hover:text-gray-900 flex items-center gap-1 top-0 transform -translate-x-32 group-hover:translate-x-0 transition-transform cursor-pointer duration-500'>add to cart <span>
               <BsArrowRight /></span></p>
           </div>
         </div>

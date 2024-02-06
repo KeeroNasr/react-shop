@@ -1,20 +1,31 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getTotalQuantity } from "../../api/Api";
 import cart from "../../assets/cart.svg";
 import logo from "../../assets/logo.png";
-import { RootState } from "../../store/store";
+import { getTotalQuantityAsync } from "../../store/shopSlice";
+import { AppDispatch, RootState } from "../../store/store";
 import { User } from "../../utils/User.interface";
 const Header = () => {
-  const productsQuantity = useSelector((state: RootState) => {
-    if (Array.isArray(state.shop.productData)) {
-      const totalQuantity = state.shop.productData.reduce((acc, item) => acc + (item.quantity ?? 0), 0);
-      return totalQuantity;
-    } else {
-      return 0;
+  const totalQuantity = useSelector((state: RootState) => state.totalCartQuantity);
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getTotalQuantityAsync());
+    updateTotalQuantity();
+  }, []);
+
+  const updateTotalQuantity = async () => {
+    try {
+      const newTotalQuantity = await getTotalQuantity();
+      return newTotalQuantity
+    } catch (error) {
+      console.error('Error updating total quantity:', error);
     }
-  });
+  };
   const userInfo: User | null = useSelector((state: RootState) => {
-    return state.shop.userInfo
+    return state.userInfo
   })
   return (
     <div className=" block w-full h-20 bg-white border-b-[1px] border-b-gray-800 font-title sticky top-0 z-10">
@@ -37,7 +48,7 @@ const Header = () => {
           <Link to="/cart">
             <div className="relative">
               <img src={cart} className="w-7" alt="" />
-              <span className="absolute w-6 top-2 left-0.5 text-sm flex items-center justify-center font-semibold font-title">{productsQuantity}</span>
+              <span className="absolute w-6 top-2 left-0.5 text-sm flex items-center justify-center font-semibold font-title">{totalQuantity}</span>
             </div>
           </Link>
           <Link to="/login">

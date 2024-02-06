@@ -1,12 +1,17 @@
 export interface Product {
   _id: number;
   title: string;
-  isNew: boolean;
-  oldPrice: string;
+  isNew?: boolean;
+  oldPrice?: string;
   price: number;
-  description: string;
-  category: string;
+  description?: string;
+  category?: string;
   image: string;
-  rating: number;
+  rating?: number;
   quantity?: number;
 }
+
+export interface Cart {
+  products: Product[],
+  totalQuantity:number
+  }
